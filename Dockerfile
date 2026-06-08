@@ -33,7 +33,8 @@ RUN mkdir -p /code
 
 # Set the working directory to that same code directory
 WORKDIR /code
-
+ENV PYTHONPATH=/code
+ENV DJANGO_SETTINGS_MODULE=cfehome.settings
 # Copy the requirements file into the container
 COPY requirements.txt /tmp/requirements.txt
 
