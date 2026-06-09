@@ -46,8 +46,8 @@ RUN pip install --upgrade pip
 RUN pip install -r /tmp/requirements.txt
 RUN pip install gunicorn  --upgrade
 
-ARG SECRET_KEY
-ENV SECRET_KEY=${DJANGO_SECRET_KEY}
+ARG DJANGO_SECRET_KEY
+ENV DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
 
 ARG DJANGO_DEBUG=0
 ENV DJANGO_DEBUG=${DJANGO_DEBUG}
