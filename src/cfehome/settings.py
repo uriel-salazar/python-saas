@@ -146,4 +146,7 @@ STATICFILES_DIRS = [
 # output for python manage.py collecstatic
 
 # local cdn 
-STATIC_ROOT = BASE_DIR.parent / " local-cdn "
+STATIC_ROOT = BASE_DIR.parent / "local-cdn"
+
+if not DEBUG:
+    STATIC_ROOT = BASE_DIR.parent / " prod-cdn "
