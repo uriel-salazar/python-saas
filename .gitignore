@@ -3,3 +3,5 @@
 venv/
 src\staticfiles\vendors
 src/staticfiles/
+/local-cdn/
+/local-cdn/**
