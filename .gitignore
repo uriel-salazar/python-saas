@@ -1,7 +1,6 @@
 *.pyc
 .env
 venv/
-src\staticfiles\vendors
-src/staticfiles/
+src\staticfiles/vendors/
 /local-cdn/
-/local-cdn/**
+src\staticfiles\vendors

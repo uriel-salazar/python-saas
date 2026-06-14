@@ -55,6 +55,13 @@ ENV DJANGO_DEBUG=${DJANGO_DEBUG}
 
 
 # database isn't available during build
+# use database url during build time 
+ARG DJANGO_SECRET_KEY
+ENV DJANGO_SECRET_KEY=$[DJANGO_SECRET_KEY]
+
+ARG DJANGO_DEBUG=0
+ENV DJANGO_DEBUG=$[DJANGO_DEBUG]
+
 # run any other commands that do not need the database
 # such as:
 # RUN python manage.py vendor_pull
