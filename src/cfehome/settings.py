@@ -19,7 +19,7 @@ load_dotenv() # load environment variables
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-print('BASE_DIR',BASE_DIR)
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -94,7 +94,7 @@ DATABASES = {
 }
 
 CONN_MAX_AGE = config("CONN_MAX_AGE", cast = int, default = 30)
-DATABASE_URL = config('DATABASE_URL', cast = str)
+DATABASE_URL = config('DATABASE_URL', default = None)
 
 if DATABASE_URL is not None:
     DATABASES = {
