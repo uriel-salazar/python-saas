@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # my apps 
     'visits',
     'comando',
 ]
@@ -96,7 +95,7 @@ DATABASES = {
 }
 
 CONN_MAX_AGE = config("CONN_MAX_AGE", cast = int, default = 30)
-DATABASE_URL = config('DATABASE_URL', cast = str)
+DATABASE_URL = config('DATABASE_URL',default=None)
 
 if DATABASE_URL is not None:
     DATABASES = {
@@ -139,17 +138,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = "static/"
 STATICFILES_BASE_DIR = BASE_DIR / "staticfiles"
 STATICFILES_BASE_DIR.mkdir(exist_ok=True, parents=True)
 STATICFILES_VENDOR_DIR = STATICFILES_BASE_DIR / "vendors"
 
 # source for python manage.py collectstatic
-STATICFILES_DIRS = [
-    BASE_DIR / "local-cdn",
-]
+STATICFILES_DIRS = [STATICFILES_BASE_DIR,
+                    ]
 
+STATIC_ROOT = BASE_DIR / "local-cdn"
 STORAGES = {
     # ...
     "staticfiles": {
