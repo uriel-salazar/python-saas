@@ -144,7 +144,8 @@ STATICFILES_BASE_DIR.mkdir(exist_ok=True, parents=True)
 STATICFILES_VENDOR_DIR = STATICFILES_BASE_DIR / "vendors"
 
 # source for python manage.py collectstatic
-STATICFILES_DIRS = [STATICFILES_BASE_DIR]
+STATICFILES_DIRS = [STATICFILES_BASE_DIR,
+                    ]
 
 STATIC_ROOT = BASE_DIR / "local-cdn"
 STORAGES = {

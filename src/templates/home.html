@@ -1,19 +1,18 @@
 {% extends 'base.html' %}
 
-{% block head_title %}Homepage - SaaS {{ block.super }}{% endblock head_title %}
+{% block head_title %}Home -{{ block.super }}{% endblock head_title %}
 
 {% block content %}
-<h1>{{ page_title }}</h1>
+<h1 class="text-3xl font-bold mb-4">{{ page_title }}</h1>
+
 <p>Hello Again !!!</p>
 
 {% include 'snippets/welcome-user-msg.html' %}
 
-<p>Page visits : {{ page_visit_count }}</p>
-<p>Percent : {{ percent }}</p>
-<p>Total visits : {{ total_visit_count }}</p>
+<p>Page visits: {{ page_visit_count }}</p>
+<p>Percent: {{ percent }}</p>
+<p>Total visits: {{ total_visit_count }}</p>
 
 {{ queryset }}
-
-
 
 {% endblock content %}
