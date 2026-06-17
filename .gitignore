@@ -2,6 +2,6 @@
 .env
 venv/
 src\staticfiles/vendors/
-/local-cdn/
+local-cdn/
 src\staticfiles\vendors\
-
+staticfiles/
