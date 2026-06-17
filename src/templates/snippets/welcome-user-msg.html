@@ -1,0 +1,9 @@
+{% if request.user.is_authenticated %}
+    <p class="text-green-600 font-medium">
+        Welcome back, {{ request.user.username }}!
+    </p>
+{% else %}
+    <p class="text-gray-600">
+        Welcome, guest!
+    </p>
+{% endif %}
