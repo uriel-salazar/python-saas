@@ -5,7 +5,7 @@ this_dir = pathlib.Path(__file__).resolve().parent
 from visits.models import PageVisit
 
 def home_view(request,*args,**kwargs):
-   
+    
     return about_view(request,*args,**kwargs)
 
 def about_view(request,*args,**kwargs):
