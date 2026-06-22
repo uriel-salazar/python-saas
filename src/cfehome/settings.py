@@ -30,8 +30,16 @@ EMAIL_HOST_USER = config("EMAIL_HOST_USER", cast=str, default=None)
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", cast=str, default=None)
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=True)  # Use EMAIL_PORT 587 for TLS
 EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool, default=False)  # EUse MAIL_PORT 465 for SSL
-
-
+# 500 error 
+ADMIN_USER_NAME=config("ADMIN_USER_NAME",default = "admin username")
+ADMIN_USER_EMAIL=config("ADMIN_USER_EMAIL",default = None)
+MANAGERS= []
+ADMINS=[]
+if all([ADMIN_USER_NAME,ADMIN_USER_EMAIL]):
+    ADMINS+=[
+        (f"{ADMIN_USER_NAME}", f"{ADMIN_USER_EMAIL}")
+    ]
+    MANAGERS = ADMINS
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
