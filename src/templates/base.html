@@ -8,12 +8,15 @@
     <title>{% block head_title %}SAAS{% endblock head_title %}</title>
 
     <link rel="stylesheet" href="{% static 'vendors/flowbite.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/custom.css' %}">
 </head>
 <body>
     {% include 'snippets/navbar.html' %}
 
+    <main class="pt-16">
     {% block content %}
     {% endblock content %}
+    </main>
 
     <script src="{% static 'vendors/flowbite.min.js' %}"></script>
 </body>
