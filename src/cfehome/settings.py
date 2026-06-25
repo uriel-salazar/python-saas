@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'visits',
     'comando',
     # third party-apps
@@ -141,6 +142,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 # django all auth config :
+LOGIN_REDIRECT_URL = '/'
+ACCCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_SIGNUP_FIELDS = [
+    "username*",
+    'email*',
+    "password1*",
+]
+ACCOUNT_EMAIL_VERIFICATION = True
+ACCOUNT_EMAIL_SUBJECT_PREFIX="[URX]"
+
+
+SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = [
    # ...
