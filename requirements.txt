@@ -5,9 +5,8 @@ python-decouple
 psycopg2-binary
 dj-database-url
 requests
-<<<<<<< HEAD
-whitenoise
-=======
 whitenoise
 django-allauth[socialaccount]
->>>>>>> main
+django-allauth-ui
+django-widget-tweaks
+slippers
