@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="{% static 'vendors/flowbite.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/custom.css' %}">
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
     {% include 'snippets/navbar.html' %}

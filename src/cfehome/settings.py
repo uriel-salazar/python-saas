@@ -67,9 +67,14 @@ INSTALLED_APPS = [
     'visits',
     'comando',
     # third party-apps
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount'
+     "allauth_ui",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+   # "allauth.socialaccount.providers.github",
+    "widget_tweaks",
+    "slippers",
+    
 ]
 
 MIDDLEWARE = [
@@ -198,6 +203,6 @@ STATIC_ROOT = BASE_DIR / "local-cdn"
 STORAGES = {
     # ...
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
