@@ -67,7 +67,7 @@ INSTALLED_APPS = [
     'visits',
     'comando',
     # third party-apps
-     "allauth_ui",
+    "allauth_ui",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -177,6 +177,8 @@ SOCIALACCOUNT_PROVIDERS = {
         "VERIFIED_EMAIL":True,
     }
 }
+
+SOCIALACCOUNT_QUERY_EMAIL = True
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
