@@ -21,11 +21,7 @@ from .views import home_view,about_view
 urlpatterns = [
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
     path('',home_view),
-=======
-    path('',home_view,name='home'),
->>>>>>> up
 =======
     path('',home_view,name='home'),
 >>>>>>> up

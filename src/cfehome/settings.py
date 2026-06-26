@@ -67,7 +67,6 @@ INSTALLED_APPS = [
     'visits',
     'comando',
     # third party-apps
-<<<<<<< HEAD
      "allauth_ui",
     "allauth",
     "allauth.account",
@@ -75,13 +74,6 @@ INSTALLED_APPS = [
 <<<<<<< HEAD
    # "allauth.socialaccount.providers.github",
 =======
-   "allauth.socialaccount.providers.github",
->>>>>>> up
-=======
-    "allauth_ui",
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
    "allauth.socialaccount.providers.github",
 >>>>>>> up
     "widget_tweaks",
@@ -187,11 +179,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 <<<<<<< HEAD
-<<<<<<< HEAD
 SOCIALACCOUNT_PROVIDERS = {}
 =======
-=======
->>>>>>> up
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -199,11 +188,6 @@ SOCIALACCOUNT_PROVIDERS = {
         "VERIFIED_EMAIL":True,
     }
 }
-<<<<<<< HEAD
->>>>>>> up
-=======
-
-SOCIALACCOUNT_QUERY_EMAIL = True
 >>>>>>> up
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
