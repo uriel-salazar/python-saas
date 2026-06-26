@@ -1,10 +1,7 @@
 {% extends "account/base.html" %}
 {% load widget_tweaks %}
 {% load static %}
-<<<<<<< HEAD
-=======
 {% load socialaccount %}
->>>>>>> up
 
 {% block extra_head %}
 {{ block.super }}
@@ -26,8 +23,6 @@
     <a href="{% url 'account_signup' %}" class="link">Create account</a>
   </p>
 </form>
-<<<<<<< HEAD
-=======
 <!--Github log in  -->
 {% get_providers as socialaccount_providers %}
 {% if socialaccount_providers %}
@@ -41,7 +36,6 @@
   {% endfor %}
 </div>
 {% endif %}
->>>>>>> up
 {% endblock %}
 
 

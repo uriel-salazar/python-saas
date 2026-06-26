@@ -19,15 +19,7 @@ from django.urls import path,include
 from auth import views as auth_views
 from .views import home_view,about_view
 urlpatterns = [
-<<<<<<< HEAD
-<<<<<<< HEAD
-    path('',home_view),
-=======
     path('',home_view,name='home'),
->>>>>>> up
-=======
-    path('',home_view,name='home'),
->>>>>>> up
     path('about/',about_view),
     path('login/',auth_views.login_view),
     path('hello-world.html',home_view),

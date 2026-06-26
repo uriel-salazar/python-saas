@@ -67,15 +67,11 @@ INSTALLED_APPS = [
     'visits',
     'comando',
     # third party-apps
-     "allauth_ui",
+    "allauth_ui",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-<<<<<<< HEAD
-   # "allauth.socialaccount.providers.github",
-=======
-   "allauth.socialaccount.providers.github",
->>>>>>> up
+    "allauth.socialaccount.providers.github",
     "widget_tweaks",
     "slippers",
     
@@ -162,25 +158,15 @@ ACCOUNT_EMAIL_VERIFICATION = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX="[URX]"
 
 AUTHENTICATION_BACKENDS = [
-   # ...
-    # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
-
-SITE_ID = 1
-
-AUTHENTICATION_BACKENDS = [
-   # ...
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
 
     # `allauth` specific authentication methods, such as login by email
     'allauth.account.auth_backends.AuthenticationBackend',
-  #  ...
 ]
 
-<<<<<<< HEAD
-SOCIALACCOUNT_PROVIDERS = {}
-=======
+SITE_ID = 1
+
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -188,7 +174,8 @@ SOCIALACCOUNT_PROVIDERS = {
         "VERIFIED_EMAIL":True,
     }
 }
->>>>>>> up
+
+SOCIALACCOUNT_QUERY_EMAIL = True
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
