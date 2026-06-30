@@ -28,9 +28,10 @@ urlpatterns = [
     path('hello-world/',home_view),
     path('register/',auth_views.register_view),
     path('accounts/', include('allauth.urls')),
-    path('admin/', admin.site.urls),
     path('protected/',pw_protected_view),
     path('protected/user-only',user_only_view),
-    path('protected/staff-only',staff_only_view)
+    path('protected/staff-only',staff_only_view),
+    path('profiles/',include('profiles.urls')),
+    path('admin/', admin.site.urls),
 
 ]

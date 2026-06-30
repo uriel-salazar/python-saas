@@ -6,7 +6,6 @@ from visits.models import PageVisit
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
-
 LOGIN_URL = settings.LOGIN_URL
 
 def home_view(request,*args,**kwargs):
@@ -57,3 +56,4 @@ def user_only_view(request):
 def staff_only_view(request):
     
     return render(request,"protected/user_only.html",{})
+
