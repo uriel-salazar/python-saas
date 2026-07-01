@@ -64,8 +64,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    # my apps 
     'visits',
     'comando',
+    "profiles",
+    "subscriptions",
     # third party-apps
     "allauth_ui",
     "allauth",
@@ -73,8 +76,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.github",
     "widget_tweaks",
-    "slippers",
-    "profiles"
+    "slippers"
     
 ]
 
