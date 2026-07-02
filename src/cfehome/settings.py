@@ -77,10 +77,14 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.github",
     "widget_tweaks",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "slippers",
     "profiles"
 =======
     "slippers"
+>>>>>>> dev
+=======
+    
 >>>>>>> dev
     
 ]
