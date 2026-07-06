@@ -4,7 +4,6 @@
 
 {% block content %}
 <h1> Enter a password : </h1>
-
 <form method="POST">{%csrf_token%}
     <input type="password" name="code" placeholder="Enter the code "/>
     <button type="submit">
