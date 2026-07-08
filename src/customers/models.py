@@ -26,9 +26,9 @@ class Customer(models.Model):
         if not self.stripe_id:
             if self.init_email_confirmed and self.init_email:  
                 email = self.init_email
-                if email != ' ' or  email is not None:
-                    stripe_id = helpers.billing.create_customer(email= email,raw = True)
-                    print(stripe_id)
+                if email and email != ' ':
+                    stripe_customer = helpers.billing.create_customer(email=email, raw=True)
+                    self.stripe_id = stripe_customer.id
             
         super().save(*args, **kwargs)
 
@@ -51,9 +51,9 @@ def allauth_user_signed_up_handler(request,user,*args, **kwargs):
 allauth_user_signed_up.connect(allauth_user_signed_up_handler)
 
 
-def allauth_user_email_handler(request,email_addres,*args, **kwargs):
+def allauth_user_email_handler(request,email_address,*args, **kwargs):
     qs = Customer.objects.filter(
-        init_email = email_addres,
+        init_email = email_address,
         init_email_confirmed = False,
         
     )
