@@ -31,3 +31,10 @@ def create_customer(name = '',email = '',metadata = {},raw=False):
     stripe_id=response.id
     return stripe_id
 
+def create_product(name = '',email = '',metadata = {},raw=False):
+    response = stripe.Product.create(name = name,
+                                      metadata=metadata)
+    if raw:
+        return response
+    stripe_id=response.id
+    return stripe_id

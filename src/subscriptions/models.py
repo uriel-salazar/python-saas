@@ -1,3 +1,4 @@
+import helpers.billing 
 from django.db import models
 from django.contrib.auth.models import Group,Permission
 from django.conf import settings 
@@ -12,6 +13,7 @@ SUBCRIPTION_PERMISSIONS = [
         ("basic_ai","Basic AI Perm"),
     ]
 class Subscription(models.Model):
+    """ Subscription Plan Product """
     name =  models.CharField(max_length=120)
     active = models.BooleanField(default=True)
     groups = models.ManyToManyField(Group)
@@ -23,12 +25,23 @@ class Subscription(models.Model):
         ]
         }
     )
-    
+    stripe_id = models.CharField(max_length =  120, null = True, blank = True)
+
     def __str__(self):
         return self.name 
     class Meta:
         # subscriptions permissions 
         permissions = SUBCRIPTION_PERMISSIONS
+    
+    def save(self, *args, **kwargs):
+        
+        if not self.stripe_id:
+                stripe_id = helpers.billing.create_product(name = self.name,
+                metadata = {"subscription_plan_id":self.id},
+                     raw = False) 
+                self.stripe_id = stripe_id
+        super().save(*args, **kwargs)
+
         
         
 class UserSubscription(models.Model):
