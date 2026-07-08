@@ -26,10 +26,10 @@ class Customer(models.Model):
         if not self.stripe_id:
             if self.init_email_confirmed and self.init_email:  
                 email = self.init_email
-                if email and email != ' ':
-                    stripe_customer = helpers.billing.create_customer(email=email, raw=True)
-                    self.stripe_id = stripe_customer.id
-            
+                if email and email != ' ': 
+                    stripe_id = helpers.billing.create_customer(email=email,
+                    metadata = {"user_id":self.user.id},raw=False)
+                    self.stripe_id = stripe_id
         super().save(*args, **kwargs)
 
 
