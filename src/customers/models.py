@@ -1,5 +1,8 @@
+from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import models
-from django.conf import settings 
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 import helpers.billing
 from allauth.account.signals import (
     user_signed_up as allauth_user_signed_up,
@@ -28,7 +31,14 @@ class Customer(models.Model):
                     print(stripe_id)
             
         super().save(*args, **kwargs)
-        
+
+
+@receiver(pre_delete, sender=get_user_model())
+def delete_customer_for_user(sender, instance, **kwargs):
+    if instance.pk is not None:
+        Customer.objects.filter(user_id=instance.pk).delete()
+
+
 def allauth_user_signed_up_handler(request,user,*args, **kwargs):
     email = user.email 
     Customer.objects.create(
