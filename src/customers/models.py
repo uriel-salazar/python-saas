@@ -28,7 +28,7 @@ class Customer(models.Model):
                 email = self.init_email
                 if email and email != ' ': 
                     stripe_id = helpers.billing.create_customer(email=email,
-                    metadata = {"user_id":self.user.id},raw=False)
+                    metadata = {"user_id":self.user.id, "username":self.user.username},raw = False)
                     self.stripe_id = stripe_id
         super().save(*args, **kwargs)
 
