@@ -47,7 +47,7 @@ def create_price(currency = "usd",
                 raw = False,
                 ):
         if product is None:
-            return None
+            return None 
         response =  stripe.Price.create(
             currency = currency,
             unit_amount = unit_amount,
