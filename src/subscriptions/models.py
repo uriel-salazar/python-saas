@@ -80,6 +80,11 @@ class SubscriptionPrice(models.Model):
         return 'usd' 
     
     @property
+    def display_sub_name(self):
+        if not self.subscription:
+            return "Plan"
+        return self.subscription.name
+    @property
     def stripe_price(self):
         
         """
