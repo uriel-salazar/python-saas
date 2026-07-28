@@ -36,13 +36,15 @@ class Subscription(models.Model):
 
     def __str__(self):
         return self.name 
+    class Meta:
+            ordering = ['order','featured','-updated']
+            permissions = SUBCRIPTION_PERMISSIONS
+    
     def get_features_as_list(self):
         if not self.features:
             return []
         return [x.strip() for x in self.features.split("\n")]
-    class Meta:
-        ordering = ['order','featured','-updated']
-        permissions = SUBCRIPTION_PERMISSIONS
+
     
     def save(self, *args, **kwargs):
         
@@ -72,7 +74,7 @@ class SubscriptionPrice(models.Model):
                                 choices = IntervalChoices.choices)
     price= models.DecimalField(max_digits =  10,decimal_places =  2 , default = 99.99)
     order = models.IntegerField(default = -1 , help_text = "Ordering on Django pricing page")
-    features = models.BooleanField(default = True ,help_text= """Feature on Django 
+    featured = models.BooleanField(default = True ,help_text= """Feature on Django 
     pricing page""" )
     updated= models.DateTimeField(auto_now = True)
     timestamp = models.DateTimeField(auto_now_add = True)                            
@@ -80,11 +82,7 @@ class SubscriptionPrice(models.Model):
     class Meta:
         ordering = ["subscription__order","order", "-updated"]
         
-    @property
-    def display_features_list(self):
-        if not self.features:
-            return []
-        return self.subscription.get_features_as_list()
+    
     @property
     def stripe_currency(self):
         return 'usd' 
