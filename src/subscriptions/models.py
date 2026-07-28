@@ -92,6 +92,13 @@ class SubscriptionPrice(models.Model):
         if not self.subscription:
             return "Plan"
         return self.subscription.name
+
+    @property
+    def display_features_list(self):
+        if not self.subscription:
+            return []
+        return self.subscription.get_features_as_list()
+    
     @property
     def stripe_price(self):
         
@@ -117,7 +124,7 @@ class SubscriptionPrice(models.Model):
                 interval = self.interval,
                 product = self.product_stripe_id,
                 metadata = {
-                    "subscription_plan_price_id": self.id
+                    "subscription_plan_price_id": self.id # type: ignore
                 },
                 raw=False 
             )
