@@ -32,12 +32,19 @@ class Subscription(models.Model):
     pricing page""" )
     updated= models.DateTimeField(auto_now = True)
     timestamp = models.DateTimeField(auto_now_add = True)
-    
+    features = models.TextField(help_text=" Features for pricing", blank=True,null=True)
+
     def __str__(self):
         return self.name 
     class Meta:
-        ordering = ['order','featured','-updated']
-        permissions = SUBCRIPTION_PERMISSIONS
+            ordering = ['order','featured','-updated']
+            permissions = SUBCRIPTION_PERMISSIONS
+    
+    def get_features_as_list(self):
+        if not self.features:
+            return []
+        return [x.strip() for x in self.features.split("\n")]
+
     
     def save(self, *args, **kwargs):
         
@@ -70,15 +77,21 @@ class SubscriptionPrice(models.Model):
     featured = models.BooleanField(default = True ,help_text= """Feature on Django 
     pricing page""" )
     updated= models.DateTimeField(auto_now = True)
-    timestamp = models.DateTimeField(auto_now_add = True)
-    
+    timestamp = models.DateTimeField(auto_now_add = True)                            
+                                
     class Meta:
-        ordering = ["subscription__order","order","featured", "-updated"]
+        ordering = ["subscription__order","order", "-updated"]
         
+    
     @property
     def stripe_currency(self):
         return 'usd' 
     
+    @property
+    def display_sub_name(self):
+        if not self.subscription:
+            return "Plan"
+        return self.subscription.name
     @property
     def stripe_price(self):
         
