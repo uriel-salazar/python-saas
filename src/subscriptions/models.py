@@ -15,7 +15,8 @@ SUBCRIPTION_PERMISSIONS = [
 class Subscription(models.Model):
     """ Subscription Plan Product """
     name =  models.CharField(max_length=120)
-    active = models.BooleanField(default=True)
+    subtitle = models.TextField(blank = True,null = True)
+    active = models.BooleanField(default = True)
     groups = models.ManyToManyField(Group)
     
     permissions = models.ManyToManyField(Permission,
@@ -89,12 +90,26 @@ class SubscriptionPrice(models.Model):
     
     @property
     def display_sub_name(self):
+        """ Displays subscription name if not it displays "Plan"
+
+        Returns:
+            Subscription name 
+        """
         if not self.subscription:
             return "Plan"
         return self.subscription.name
 
+    
+    @property
+    def display_sub_subtitle(self):
+        if not self.subscription:
+                return "plan"
+        return self.subscription.subtitle
     @property
     def display_features_list(self):
+        """
+        Displays features from subscription model (feature)
+        """
         if not self.subscription:
             return []
         return self.subscription.get_features_as_list()
