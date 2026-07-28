@@ -89,12 +89,20 @@ class SubscriptionPrice(models.Model):
     
     @property
     def display_sub_name(self):
+        """ Displays subscription name if not it displays "Plan"
+
+        Returns:
+            Subscription name 
+        """
         if not self.subscription:
             return "Plan"
         return self.subscription.name
 
     @property
     def display_features_list(self):
+        """
+        Displays features from subscription model (feature)
+        """
         if not self.subscription:
             return []
         return self.subscription.get_features_as_list()
