@@ -24,6 +24,7 @@ from subscriptions import views as subscriptions_view
 urlpatterns = [
     path('',home_view,name='home'),
     path('pricing/',subscriptions_view.subscriptions_price_view,name='pricing'),
+    path('pricing/<str:interval>/',subscriptions_view.subscriptions_price_view,name = 'pricing_interval'),
     path('about/',about_view),
   # path('login/',auth_views.login_view),
     #  path('register/',auth_views.register_view)
