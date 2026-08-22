@@ -47,8 +47,8 @@ if all([ADMIN_USER_NAME,ADMIN_USER_EMAIL]):
 SECRET_KEY = config("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DJANGO_DEBUG", default=False, cast=bool)
-
+DEBUG = config("DJANGO_DEBUG", default = False, cast = bool)
+BASE_URL = config('BASE_URL',default = None)
 ALLOWED_HOSTS = [
     ".railway.app",
     "127.0.0.1",

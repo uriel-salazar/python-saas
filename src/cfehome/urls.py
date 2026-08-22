@@ -24,7 +24,7 @@ from subscriptions import views as subscriptions_view
 
 urlpatterns = [
     path('',home_view,name='home'),
-    path('checkout/sub-price/<int:price_id>/' , 
+    path('ch    eckout/sub-price/<int:price_id>/' , 
          checkout_views.product_price_redirect_view,
          name = 'sub-price-checkout'
          ),
