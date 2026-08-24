@@ -1,8 +1,10 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect,render
 from django.contrib.auth.decorators import login_required
 from django.conf import settings 
 from subscriptions.models import SubscriptionPrice
 import helpers.billing 
+
+import stripe
 from django.urls import reverse
 # Create your views here.
 
@@ -42,5 +44,21 @@ def checkout_redirect_view(request):
     )
     return redirect(session_url)
 
+
 def checkout_finalize_view(request):
-    return
+    session_id = request.GET.get('session_id')
+    session_r = helpers.billing.get_checkout_session(session_id,
+    raw = True)
+    customer_id= session_r.customer 
+    sub_stripe_id = session_r.subscription
+    
+    sub_r = helpers.billing.get_subscription(sub_stripe_id,raw=True)
+  #  print(session_r)
+ #   print(sub_r)
+    context = {
+        'subscription':sub_r,
+        'checkout':session_r
+    }
+    
+    return render(request, "checkout/success.html", context)
+

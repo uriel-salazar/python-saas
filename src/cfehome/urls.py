@@ -34,7 +34,7 @@ urlpatterns = [
          
          ),
     
-    path('checkout/sucess/',
+    path('checkout/success/',
              checkout_views.checkout_finalize_view,
              name='stripe-checkout-finalize',
              ),
