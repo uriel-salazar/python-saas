@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block head_title %}Home -{{ block.super }}{% endblock head_title %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-4">{{ page_title }}</h1>
+
+<p>Hello Again !!!</p>
+<h1 class='text-lg font-medium'> Succcess Welcome  !</h1>
+
+<div class='mb-12'>
+    {{ subscription }}
+</div>
+
+<div>
+    {{ checkout }}
+</div>
+
+
+{% include 'snippets/welcome-user-msg.html' %}
+
+<p>Page visits: {{ page_visit_count }}</p>
+<p>Percent: {{ percent }}</p>
+<p>Total visits: {{ total_visit_count }}</p>
+
+{{ queryset }}
+
+{% endblock content %}
