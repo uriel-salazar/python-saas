@@ -47,56 +47,36 @@ def checkout_redirect_view(request):
 
 def checkout_finalize_view(request):
     session_id = request.GET.get('session_id')
-    customer_id,plan_id = helpers.billing.checkout_customer_plan(
-        session_id
-    )
-    
-    price_qs = SubscriptionPrice.objects.filter(
-        stripe_id= session_id
-    )
-    
-    # use get and not filter, because they are all unique. 
-    try : 
-        sub_obj = Subscription.objects.get(subscription_price_stripe_id =plan_id)
-        
-    except:
+    if not session_id:
+        return HttpResponseBadRequest("Missing session_id")
+
+    try:
+        customer_id, plan_id = helpers.billing.checkout_customer_plan(
+            session_id
+        )
+    except Exception:
+        return HttpResponseBadRequest("Invalid checkout session")
+
+    try:
+        price_obj = SubscriptionPrice.objects.get(stripe_id=plan_id)
+        sub_obj = price_obj.subscription
+    except SubscriptionPrice.DoesNotExist:
         sub_obj = None
 
-    try : 
-            user_obj = User.objects.get(customer__stripe_id = customer_id)
-            
-    except:
-            user_obj = None
-    
-    user_sub_exists = False
-    try : 
-       _user_sub_obj  = UserSubscription.objects.get(user = user_obj)
-       user_sub_exists = True
+    try:
+        user_obj = User.objects.get(customer__stripe_id=customer_id)
+    except User.DoesNotExist:
+        user_obj = None
 
-    except UserSubscription.DoesNotExist:
-        _user_sub_obj = UserSubscription.objects.create(
-            user = user_obj, subscription = sub_obj
-        )  
-    except:
-        _user_sub_obj = None
-        
-    if None in [sub_obj,user_obj,_user_sub_obj]:
+    if sub_obj is None or user_obj is None:
         return HttpResponseBadRequest("there was an error...")
-    
-    if user_sub_exists:
-        _user_sub_obj.subscription  = sub_obj
-        _user_sub_obj.save()
-    
-    __user_sub_obj  = UserSubscription.objects.get(user = user_obj)
 
-    UserSubscription.objects.create(user = user_obj,
-    subscription = sub_obj )
-    sub_plan_price_stripe_id = sub_plan.id
-    
-    #  print(session_r)
-    #   print(sub_r)
+    _user_sub_obj, created = UserSubscription.objects.update_or_create(
+        user=user_obj,
+        defaults={"subscription": sub_obj, "active": True}
+    )
+
     context = {}
-    
     return render(request, "checkout/success.html", context)
 
  
