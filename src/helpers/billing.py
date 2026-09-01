@@ -1,6 +1,7 @@
 import stripe
 from decouple import config
 from django.core.exceptions import ImproperlyConfigured
+import helpers.billing
 
 DJANGO_DEBUG = config("DEBUG", default=False, cast=bool)
 STRIPE_SECRET_KEY = config(
@@ -102,3 +103,14 @@ def get_subscription(stripe_id,raw = False):
      if raw:
             return response
      return response.url
+ 
+def checkout_customer_plan(session_id,):
+    checkout_r = get_checkout_session(session_id,
+    raw = True)
+    customer_id = checkout_r.customer 
+    sub_stripe_id = checkout_r.subscription
+        
+    sub_r = helpers.billing.get_subscription(sub_stripe_id,raw=True)
+    sub_plan = sub_r.plan
+    return customer_id, sub_plan.id
+
