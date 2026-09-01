@@ -1,8 +1,4 @@
-from django.test import TestCase
-<<<<<<< HEAD
 
-# Create your tests here.
-=======
 from django.urls import resolve, reverse
 
 from checkouts import views
@@ -13,4 +9,3 @@ class CheckoutUrlTests(TestCase):
         path = reverse('stripe-checkout-finalize')
         self.assertEqual(path, '/checkout/success/')
         self.assertEqual(resolve(path).func, views.checkout_finalize_view)
->>>>>>> dev

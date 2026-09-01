@@ -1,14 +1,14 @@
 from django.shortcuts import redirect,render
 from django.contrib.auth.decorators import login_required
 from django.conf import settings 
-from subscriptions.models import SubscriptionPrice
-import helpers.billing 
-
-import stripe
+from django.contrib.auth import get_user_model 
+from subscriptions.models import SubscriptionPrice,Subscription,UserSubscription
+import helpers.billing
+from django.http import HttpResponseBadRequest
 from django.urls import reverse
 # Create your views here.
 
-
+User = get_user_model()
 BASE_URL = settings.BASE_URL 
 def product_price_redirect_view(request,price_id = None, *args, **kwargs):
     request.session['checkout_subscription_price_id']  = price_id 
@@ -47,18 +47,56 @@ def checkout_redirect_view(request):
 
 def checkout_finalize_view(request):
     session_id = request.GET.get('session_id')
-    session_r = helpers.billing.get_checkout_session(session_id,
-    raw = True)
-    customer_id= session_r.customer 
-    sub_stripe_id = session_r.subscription
+    customer_id,plan_id = helpers.billing.checkout_customer_plan(
+        session_id
+    )
     
-    sub_r = helpers.billing.get_subscription(sub_stripe_id,raw=True)
-  #  print(session_r)
- #   print(sub_r)
-    context = {
-        'subscription':sub_r,
-        'checkout':session_r
-    }
+    price_qs = SubscriptionPrice.objects.filter(
+        stripe_id= session_id
+    )
+    
+    # use get and not filter, because they are all unique. 
+    try : 
+        sub_obj = Subscription.objects.get(subscription_price_stripe_id =plan_id)
+        
+    except:
+        sub_obj = None
+
+    try : 
+            user_obj = User.objects.get(customer__stripe_id = customer_id)
+            
+    except:
+            user_obj = None
+    
+    user_sub_exists = False
+    try : 
+       _user_sub_obj  = UserSubscription.objects.get(user = user_obj)
+       user_sub_exists = True
+
+    except UserSubscription.DoesNotExist:
+        _user_sub_obj = UserSubscription.objects.create(
+            user = user_obj, subscription = sub_obj
+        )  
+    except:
+        _user_sub_obj = None
+        
+    if None in [sub_obj,user_obj,_user_sub_obj]:
+        return HttpResponseBadRequest("there was an error...")
+    
+    if user_sub_exists:
+        _user_sub_obj.subscription  = sub_obj
+        _user_sub_obj.save()
+    
+    __user_sub_obj  = UserSubscription.objects.get(user = user_obj)
+
+    UserSubscription.objects.create(user = user_obj,
+    subscription = sub_obj )
+    sub_plan_price_stripe_id = sub_plan.id
+    
+    #  print(session_r)
+    #   print(sub_r)
+    context = {}
     
     return render(request, "checkout/success.html", context)
 
+ 
