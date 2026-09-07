@@ -163,6 +163,8 @@ class UserSubscription(models.Model):
     subscription = models.ForeignKey(Subscription, on_delete=models.SET_NULL,
     null = True,blank = True)
     active= models.BooleanField(default = True)
+    stripe_id = models.CharField(max_length =  120, null = True, blank = True)
+
     
 def user_post_save(sender,instance,*args,**kwargs):
     user_sub_instance = instance

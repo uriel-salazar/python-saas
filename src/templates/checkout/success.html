@@ -3,10 +3,18 @@
 {% block head_title %}Home -{{ block.super }}{% endblock head_title %}
 
 {% block content %}
-<h1 class="text-3xl font-bold mb-4">{{ page_title }}</h1>
+<h1 class="text-3xl font-medium mb-4 text-center">{{ page_title }}</h1>
+<h1 class='text-lg font-big'> Succcess Welcome  !</h1>
 
-<p>Hello Again !!!</p>
-<h1 class='text-lg font-medium'> Succcess, you have a subscription !</h1>
+<div class='type-subscription'>
+    {{subscription.id}}
+
+</div>
+
+
+<h1 class='text-lg font-big'> Type of subscription{{subscription.name}}</h1>
+
+
 
 <div class='mb-12'>
     {{ subscription }}
@@ -17,6 +25,7 @@
 </div>
 
 
+<<<<<<< HEAD
 {% include 'snippets/welcome-user-msg.html' %}
 
 <p>Page visits: {{ page_visit_count }}</p>
@@ -25,4 +34,6 @@
 
 {{ queryset }}
 
+=======
+>>>>>>> dev
 {% endblock content %}
