@@ -51,7 +51,7 @@ def checkout_finalize_view(request):
         return HttpResponseBadRequest("Missing session_id")
 
     try:
-        customer_id, plan_id = helpers.billing.checkout_customer_plan(
+        customer_id, plan_id,sub_stripe_id = helpers.billing.checkout_customer_plan(
             session_id
         )
     except Exception:
@@ -61,6 +61,7 @@ def checkout_finalize_view(request):
         price_obj = SubscriptionPrice.objects.get(stripe_id=plan_id)
         sub_obj = price_obj.subscription
     except SubscriptionPrice.DoesNotExist:
+        sub_stripe_id =sub_stripe_id 
         sub_obj = None
 
     try:
@@ -75,6 +76,15 @@ def checkout_finalize_view(request):
         user=user_obj,
         defaults={"subscription": sub_obj, "active": True}
     )
+    
+    if _user_sub_obj:
+        # cancel old subscription
+        old_stripe_id =  _user_sub_obj.stripe_id 
+        if old_stripe_id is not None:
+            helpers.billing.cancel_subscription(old_stripe_id,reason='Auto ended membership')
+        _user_sub_obj.subscription = sub_obj
+        _user_sub_obj.stripe_id = sub_stripe_id
+        _user_sub_obj.save() # we assign a new subscription  
 
     context = {}
     return render(request, "checkout/success.html", context)
