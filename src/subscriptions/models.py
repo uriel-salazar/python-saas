@@ -164,8 +164,19 @@ class UserSubscription(models.Model):
     null = True,blank = True)
     active= models.BooleanField(default = True)
     stripe_id = models.CharField(max_length =  120, null = True, blank = True)
-
+    user_cancelled = models.BooleanField(default = False)
+    original_period_start = models.DateTimeField(auto_now=False,
+    blank = True,null = True)
+    current_period_start = models.DateTimeField(auto_now = False,auto_now_add = False,
+    blank = True,null = True)
+    current_period_end = models.DateTimeField(auto_now = False,auto_now_add = False,
+        blank = True,null = True)
     
+    def save(self,*args,**kwargs):
+        super().save(*args,**kwargs)
+        if (self.current_period_start is None 
+            and self.current_period_start is not None):
+            self.current_period_start = self.current_period_start
 def user_post_save(sender,instance,*args,**kwargs):
     user_sub_instance = instance
     user = user_sub_instance.user 
