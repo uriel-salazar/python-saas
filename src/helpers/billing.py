@@ -1,4 +1,5 @@
 import stripe
+import time
 from decouple import config
 from django.core.exceptions import ImproperlyConfigured
 import helpers.billing
@@ -125,11 +126,17 @@ def get_checkout_customer_plan(session_id):
     customer_id = checkout_r.customer 
     sub_stripe_id = checkout_r.subscription
         
-    sub_r = helpers.billing.get_subscription(sub_stripe_id,raw=True)
-    # current_period_start 
-    sub_plan = sub_r.plan
-    current_period_start = date_utils.timestamp_as_datetime(sub_r.current_period_start)
-    current_period_end= date_utils.timestamp_as_datetime(sub_r.current_period_end)
+    sub_r = helpers.billing.get_subscription(sub_stripe_id, raw=True)
+    # if it has a subscription / plan 
+    if hasattr(sub_r, 'plan'): 
+        sub_plan = sub_r.plan
+    else:
+        # if u don't have a subscription yet 
+        sub_plan = sub_r['items']['data'][0]['plan']['id']
+
+    now = date_utils.timestamp_as_datetime(time.time())
+    current_period_start = date_utils.timestamp_as_datetime(sub_r.current_period_start) if hasattr(sub_r, 'current_period_start') else now
+    current_period_end = date_utils.timestamp_as_datetime(sub_r.current_period_end) if hasattr(sub_r, 'current_period_end') else now
 
     
     data = {
@@ -137,7 +144,7 @@ def get_checkout_customer_plan(session_id):
         'plan_id':sub_plan, 
         'sub_stripe_id':sub_stripe_id,
         'current_period_start':current_period_start,
-        'currrent_period_end':current_period_end
+        'current_period_end':current_period_end
     }
     return data
 
