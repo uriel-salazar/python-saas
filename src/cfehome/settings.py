@@ -159,7 +159,7 @@ ACCOUNT_SIGNUP_FIELDS = [
     "password1*",
 ]
 ACCOUNT_EMAIL_VERIFICATION = True
-ACCOUNT_EMAIL_SUBJECT_PREFIX="[URX]"
+ACCOUNT_EMAIL_SUBJECT_PREFIX="[SAAS APP]"
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
