@@ -5,3 +5,4 @@ src\staticfiles/vendors/
 local-cdn/
 src\staticfiles\vendors\
 staticfiles/
+launch.json

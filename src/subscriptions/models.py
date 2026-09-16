@@ -174,9 +174,6 @@ class UserSubscription(models.Model):
     
     def save(self,*args,**kwargs):
         super().save(*args,**kwargs)
-        if (self.current_period_start is None 
-            and self.current_period_start is not None):
-            self.current_period_start = self.current_period_start
 def user_post_save(sender,instance,*args,**kwargs):
     user_sub_instance = instance
     user = user_sub_instance.user 

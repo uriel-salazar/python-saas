@@ -1,14 +1,153 @@
 import stripe
+import time
 from decouple import config
-DJANGO_DEBUG = config("DEBUG",default = False, cast= bool) 
-STRIPE_SECRET_KEY = config("STRIPE_SECRET_KEY",default="",cast= str)
+from django.core.exceptions import ImproperlyConfigured
+import helpers.billing
+from . import date_utils
 
+<<<<<<< HEAD
+=======
+DJANGO_DEBUG = config("DEBUG", default=False, cast=bool)
+STRIPE_SECRET_KEY = config(
+    "STRIPE_SECRET_KEY",
+    default=config(
+        "STRIPE_API_KEY",
+        default=config("STRIPE.API_KEY", default="", cast=str),
+        cast=str,
+    ),
+    cast=str,
+)
+
+if STRIPE_SECRET_KEY:
+    stripe.api_key = STRIPE_SECRET_KEY
+else:
+    stripe.api_key = None
+
+>>>>>>> dev
 if "sk_test" in STRIPE_SECRET_KEY and not DJANGO_DEBUG:
     raise ValueError("Invalid Stripe key for prod")
 
-def create_costumer():
-    stripe.Customer.create(
-    name = "Jenny Rosen",
-    email = "jennyrosen@example.com",
+
+def create_customer(name = '',email = '',metadata = {},raw=False):
+
+    response = stripe.Customer.create(name = name, email=email,
+                                      metadata=metadata)
+    if raw:
+        return response
+    stripe_id=response.id
+    return stripe_id
+
+def create_product(name = '',email = '',metadata = {},raw=False):
+    response = stripe.Product.create(name = name,
+                                      metadata=metadata)
+    if raw:
+        return response
+    stripe_id=response.id
+    return stripe_id
+
+def create_price(currency = "usd",
+                unit_amount = 9999,
+                interval = "month",
+                product = None,
+                metadata = {},
+                raw = False,
+                ):
+        if product is None:
+            return None 
+        response =  stripe.Price.create(
+            currency = currency,
+            unit_amount = unit_amount,
+            recurring = {"interval": interval},
+            product = product,
+            metadata = metadata 
+        )
+        if raw:
+            return response
+        stripe_id=response.id
+        return stripe_id
+    
+
+def start_session_checkout(customer_id,
+          success_url = "",
+          price_stripe_id = '',
+          cancel_url = '',
+          raw = True):
+    
+    if not success_url.endswith('?session_id={CHECKOUT_SESSION_ID}'):
+        success_url = f"{success_url}?session_id={{CHECKOUT_SESSION_ID}}"
+        
+    params = dict(
+            customer = customer_id,
+            success_url = success_url,
+            line_items = [{"price":price_stripe_id,"quantity":1}],
+            mode = "subscription",
     )
+    if cancel_url:
+        params["cancel_url"] = cancel_url
+        
+    response = stripe.checkout.Session.create(**params)
+    
+    if raw:   
+        return response
+    
+    return response.url
+
+
+def get_checkout_session(stripe_id, raw = False):
+    response = stripe.checkout.Session.retrieve(
+        stripe_id,
+        )
+    if raw:
+        return response
+    return response.url
+
+def get_subscription(stripe_id,raw = False):
+     response = stripe.Subscription.retrieve(
+            stripe_id,
+            )
+     if raw:
+            return response
+     return response.url
+ 
+def cancel_subscription(stripe_id,reason='',raw = True):
+    # details about why this subscription is cancelled 
+     
+     try:
+        response = stripe.Subscription.cancel(
+                stripe_id,
+                cancellation_details = {'comment': reason },
+                )
+     except stripe.error.InvalidRequestError:
+         return None
+     if raw:
+            return response
+     return response.url
+ 
+def get_checkout_customer_plan(session_id):
+    checkout_r = get_checkout_session(session_id,
+    raw = True)
+    customer_id = checkout_r.customer 
+    sub_stripe_id = checkout_r.subscription
+        
+    sub_r = helpers.billing.get_subscription(sub_stripe_id, raw=True)
+    # if it has a subscription / plan 
+    if hasattr(sub_r, 'plan'): 
+        sub_plan = sub_r.plan
+    else:
+        # if u don't have a subscription yet 
+        sub_plan = sub_r['items']['data'][0]['plan']['id']
+
+    now = date_utils.timestamp_as_datetime(time.time())
+    current_period_start = date_utils.timestamp_as_datetime(sub_r.current_period_start) if hasattr(sub_r, 'current_period_start') else now
+    current_period_end = date_utils.timestamp_as_datetime(sub_r.current_period_end) if hasattr(sub_r, 'current_period_end') else now
+
+    
+    data = {
+        "customer_id":customer_id,
+        'plan_id':sub_plan, 
+        'sub_stripe_id':sub_stripe_id,
+        'current_period_start':current_period_start,
+        'current_period_end':current_period_end
+    }
+    return data
 
