@@ -47,16 +47,6 @@ def checkout_redirect_view(request):
 
 def checkout_finalize_view(request):
     session_id = request.GET.get('session_id')
-<<<<<<< HEAD
-    checkout_data = helpers.billing.get_checkout_customer_plan(session_id)
-    data = {
-            "customer_id":customer_id,
-            'plan_id':sub_plan, 
-            'sub_stripe_id':sub_stripe_id,
-            'current_period_start':sub_r.current_period_start,
-            'currrent_period_end':sub_r.current_period_end
-    }
-=======
     if not session_id:
         return HttpResponseBadRequest("Missing session_id")
 
@@ -67,7 +57,6 @@ def checkout_finalize_view(request):
         traceback.print_exc()
         return HttpResponseBadRequest("Invalid checkout session")
 
->>>>>>> dev
     plan_id = checkout_data.get('plan_id')
     customer_id = checkout_data.get('customer_id')
     sub_stripe_id = checkout_data.get('sub_stripe_id')

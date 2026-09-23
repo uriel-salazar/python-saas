@@ -5,8 +5,6 @@ from django.core.exceptions import ImproperlyConfigured
 import helpers.billing
 from . import date_utils
 
-<<<<<<< HEAD
-=======
 DJANGO_DEBUG = config("DEBUG", default=False, cast=bool)
 STRIPE_SECRET_KEY = config(
     "STRIPE_SECRET_KEY",
@@ -22,8 +20,6 @@ if STRIPE_SECRET_KEY:
     stripe.api_key = STRIPE_SECRET_KEY
 else:
     stripe.api_key = None
-
->>>>>>> dev
 if "sk_test" in STRIPE_SECRET_KEY and not DJANGO_DEBUG:
     raise ValueError("Invalid Stripe key for prod")
 
