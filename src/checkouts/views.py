@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings 
 from django.contrib.auth import get_user_model 
 from subscriptions.models import SubscriptionPrice,Subscription,UserSubscription
+from customers.models import Customer
 import helpers.billing
 from django.http import HttpResponseBadRequest
 from django.urls import reverse
@@ -27,8 +28,30 @@ def checkout_redirect_view(request):
         obj = None 
     if checkout_subscription_price_id is None or obj is None :
         return redirect("pricing")
-    customer_stripe_id = request.user.customer.stripe_id
-    print(customer_stripe_id)
+    
+    try:
+        customer_obj = Customer.objects.filter(user=request.user).first()
+        # if user doesn't exist, create one in memory 
+        if customer_obj is None:
+            customer_obj = Customer(
+                user=request.user,
+                init_email=request.user.email,
+                init_email_confirmed=False,
+            )
+        # if customer has not and stripe id 
+        if not customer_obj.stripe_id:
+            customer_stripe_id = helpers.billing.create_customer(
+                email=request.user.email,
+                metadata={"user_id": request.user.id, "username": request.user.username},
+                raw=False,
+            )
+            customer_obj.stripe_id = customer_stripe_id
+            customer_obj.save()
+        else:
+            customer_stripe_id = customer_obj.stripe_id
+    except Exception:
+        # if it fails, redirect to pricing isntead of error.
+        return redirect("pricing")
     
     success_url_path = reverse("stripe-checkout-finalize")
     pricing_url_path = reverse("pricing")
