@@ -85,6 +85,7 @@ def checkout_finalize_view(request):
     sub_stripe_id = checkout_data.get('sub_stripe_id')
     current_period_start = checkout_data.get('current_period_start')
     current_period_end = checkout_data.get('current_period_end')
+    original_period_start = checkout_data.get('original_period_start')
 
     try:
         price_obj = SubscriptionPrice.objects.get(stripe_id=plan_id)
@@ -98,6 +99,7 @@ def checkout_finalize_view(request):
         'user_cancelled': False,
         'current_period_start': current_period_start,
         'current_period_end': current_period_end,
+        'original_period_start': original_period_start,
     }
 
     try:

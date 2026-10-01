@@ -123,28 +123,49 @@ def cancel_subscription(stripe_id,reason='',raw = True):
      return response.url
  
 def get_checkout_customer_plan(session_id):
+    """ Sets up plan chosen by the user, with data like customer id,
+    plan id and period start.
+    
+    Returns: Data dict with Customer plan
+    """
     checkout_r = get_checkout_session(session_id,
     raw = True)
     customer_id = checkout_r.customer 
     sub_stripe_id = checkout_r.subscription
         
     sub_r = helpers.billing.get_subscription(sub_stripe_id, raw=True)
-    # if it has a subscription / plan 
-    if hasattr(sub_r, 'plan'): 
-        sub_plan = sub_r.plan
+  
+    sub_item = sub_r['items']['data'][0] if hasattr(sub_r, 'items') else None
+    period_source = sub_item if sub_item is not None and hasattr(
+        sub_item, 'current_period_start') else sub_r
+    
+    # check if attributes exists 
+    if sub_item is not None and hasattr(sub_item, 'price'):
+        sub_plan = sub_item.price.id
+    elif hasattr(sub_item, 'plan'):
+        sub_plan = sub_item.plan.id
+    elif hasattr(sub_r, 'plan'):
+        sub_plan = sub_r.plan.id
     else:
-        # if u don't have a subscription yet 
-        sub_plan = sub_r['items']['data'][0]['plan']['id']
+        sub_plan = None
 
     now = date_utils.timestamp_as_datetime(time.time())
-    current_period_start = date_utils.timestamp_as_datetime(sub_r.current_period_start) if hasattr(sub_r, 'current_period_start') else now
-    current_period_end = date_utils.timestamp_as_datetime(sub_r.current_period_end) if hasattr(sub_r, 'current_period_end') else now
+    current_period_start = date_utils.timestamp_as_datetime(
+        period_source.current_period_start
+        ) if hasattr(period_source, 'current_period_start') else now
+    current_period_end = date_utils.timestamp_as_datetime(
+        period_source.current_period_end
+        ) if hasattr(period_source, 'current_period_end') else now
+    original_period_start = date_utils.timestamp_as_datetime(
+        sub_r.created
+        ) if hasattr(sub_r, 'created') else current_period_start
 
-    
+
     data = {
         "customer_id":customer_id,
         'plan_id':sub_plan, 
         'sub_stripe_id':sub_stripe_id,
+        'original_period_start':original_period_start,
         'current_period_start':current_period_start,
         'current_period_end':current_period_end
     }
