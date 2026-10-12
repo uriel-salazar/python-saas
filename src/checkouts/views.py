@@ -69,6 +69,8 @@ def checkout_redirect_view(request):
 
 
 def checkout_finalize_view(request):
+    """ 
+    """
     session_id = request.GET.get('session_id')
     if not session_id:
         return HttpResponseBadRequest("Missing session_id")
@@ -129,6 +131,7 @@ def checkout_finalize_view(request):
         _user_sub_obj.save()
 
     context = {}
+    # return succes of subscription purchase 
     return render(request, "checkout/success.html", context)
 
  
