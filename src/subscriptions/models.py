@@ -172,6 +172,15 @@ class UserSubscription(models.Model):
     current_period_end = models.DateTimeField(auto_now = False,auto_now_add = False,
         blank = True,null = True)
     
+    @property
+    def billing_cycle_achor(self):
+        """
+        Optional delay to start a new subscription in Stripe checkout 
+        """
+        if not self.current_period_end:
+            return None
+        return int(self.current_period_end.timestamp())
+    
     def save(self,*args,**kwargs):
         super().save(*args,**kwargs)
 def user_post_save(sender,instance,*args,**kwargs):
