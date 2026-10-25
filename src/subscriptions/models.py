@@ -169,6 +169,15 @@ class UserSubscription(models.Model):
         
         
     # If the user is deleted the subscription will be deleted as well
+    class SubscriptionStatus(models.TextChoices):
+            ACTIVE = 'active','Active' 
+            TRIALING ='trialing','Trialing'
+            INCOMPLETE ='incomplete','Incomplete'
+            INCOMPLETE_EXPIRED = 'incomplete_expired', 'Expired'
+            PAST_DUE ='past_due', 'Past Due'
+            CANCELLED ='unpaid','Unpaid'
+            PAUSED = 'paused' , 'Paused'
+            
     user = models.OneToOneField(User,on_delete = models.CASCADE)
     subscription = models.ForeignKey(Subscription, on_delete=models.SET_NULL,
     null = True,blank = True)
@@ -180,7 +189,7 @@ class UserSubscription(models.Model):
     current_period_start = models.DateTimeField(auto_now = False,auto_now_add = False,
     blank = True,null = True)
     status = models.CharField(max_length = 20,
-    choices = SubscriptionStatus.choices, null = True,blank = True) 
+        choices = SubscriptionStatus.choices, null = True,blank = True)  
     current_period_end = models.DateTimeField(auto_now = False,auto_now_add = False,
         blank = True,null = True)
     
