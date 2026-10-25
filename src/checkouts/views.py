@@ -82,13 +82,11 @@ def checkout_finalize_view(request):
         traceback.print_exc()
         return HttpResponseBadRequest("Invalid checkout session")
 
-    plan_id = checkout_data.get('plan_id')
-    customer_id = checkout_data.get('customer_id')
-    sub_stripe_id = checkout_data.get('sub_stripe_id')
-    current_period_start = checkout_data.get('current_period_start')
-    current_period_end = checkout_data.get('current_period_end')
+    plan_id = checkout_data.pop('plan_id')
+    customer_id = checkout_data.pop('customer_id')
+    sub_stripe_id = checkout_data.pop('sub_stripe_id')
     original_period_start = checkout_data.get('original_period_start')
-
+    subscription_data = {**checkout_data}
     try:
         price_obj = SubscriptionPrice.objects.get(stripe_id=plan_id)
         sub_obj = price_obj.subscription
@@ -99,9 +97,7 @@ def checkout_finalize_view(request):
         'subscription': sub_obj,
         'stripe_id': sub_stripe_id,
         'user_cancelled': False,
-        'current_period_start': current_period_start,
-        'current_period_end': current_period_end,
-        'original_period_start': original_period_start,
+        **subscription_data,
     }
 
     try:

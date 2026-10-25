@@ -21,9 +21,22 @@ if STRIPE_SECRET_KEY:
 else:
     stripe.api_key = None
 if "sk_test" in STRIPE_SECRET_KEY and not DJANGO_DEBUG:
-    raise ValueError("Invalid Stripe key for prod")
+    raise ValueError("Invalid Stripe key for product")
 
 
+def serialize_subscription_data(subscription_response):
+   
+    status = subscription_response.status
+    current_period_start = date_utils.timestamp_as_datetime(subscription_response.
+    current_period_start)
+    current_period_end = date_utils.timestamp_as_datetime(subscription_response.current_period_end)
+    return {
+            'current_period_start':current_period_start,
+            'current_period_end':current_period_end,
+            'status':status,
+    }
+    
+    
 def create_customer(name = '',email = '',metadata = {},raw=False):
     """ Creates a customer for stripe 
     Returns:
@@ -106,7 +119,7 @@ def get_subscription(stripe_id,raw = False):
             )
      if raw:
             return response
-     return response.url
+     return serialize_subscription_data(response)
  
 def cancel_subscription(stripe_id,reason='',raw = True):
     # details about why this subscription is cancelled 
@@ -122,6 +135,8 @@ def cancel_subscription(stripe_id,reason='',raw = True):
             return response
      return response.url
  
+
+ 
 def get_checkout_customer_plan(session_id):
     """ Sets up plan chosen by the user, with data like customer id,
     plan id and period start.
@@ -134,7 +149,10 @@ def get_checkout_customer_plan(session_id):
     sub_stripe_id = checkout_r.subscription
         
     sub_r = helpers.billing.get_subscription(sub_stripe_id, raw=True)
-  
+    status = sub_r.status
+    sub_plan = sub_r.plan 
+    subscription_data = serialize_subscription_data(sub_r)
+    
     sub_item = sub_r['items']['data'][0] if hasattr(sub_r, 'items') else None
     period_source = sub_item if sub_item is not None and hasattr(
         sub_item, 'current_period_start') else sub_r
@@ -165,9 +183,7 @@ def get_checkout_customer_plan(session_id):
         "customer_id":customer_id,
         'plan_id':sub_plan, 
         'sub_stripe_id':sub_stripe_id,
-        'original_period_start':original_period_start,
-        'current_period_start':current_period_start,
-        'current_period_end':current_period_end
+        **subscription_data,
     }
     return data
 
