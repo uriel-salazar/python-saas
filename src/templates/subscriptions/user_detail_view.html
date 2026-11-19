@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block head_title %}Subscription - {{ block.super }}{% endblock head_title %}
+
+{% block content %}
+<div class="subscription-container">
+    <h1 class="subscription-title">Your Subscription</h1>
+    <form action='' method='POST'>{% csrf_token %}
+        <button type='submit'>Refresh</button>
+    </form>
+    <div class="subscription-details">
+        <p class="subscription-item">status: {{ subscription.status|default:"-" }}</p>
+        <p class="subscription-item">current_period_start: {{ subscription.current_period_start|default:"-" }}</p>
+        <p class="subscription-item">current_period_end: {{ subscription.current_period_end|default:"-" }}</p>
+        {% if subscription.cancel_at_period_end %}
+            <p class="subscription-item">Cancelling: this subscription stays active until the current period ends.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

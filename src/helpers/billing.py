@@ -24,16 +24,20 @@ if "sk_test" in STRIPE_SECRET_KEY and not DJANGO_DEBUG:
     raise ValueError("Invalid Stripe key for product")
 
 
+
 def serialize_subscription_data(subscription_response):
    
     status = subscription_response.status
-    current_period_start = date_utils.timestamp_as_datetime(subscription_response.
-    current_period_start)
-    current_period_end = date_utils.timestamp_as_datetime(subscription_response.current_period_end)
+    sub_item= subscription_response["items"]["data"][0]
+    
+    current_period_start = date_utils.timestamp_as_datetime(sub_item.current_period_start)
+    current_period_end = date_utils.timestamp_as_datetime(sub_item.current_period_end)
     return {
             'current_period_start':current_period_start,
             'current_period_end':current_period_end,
             'status':status,
+            'cancel_at_period_end':getattr(
+                subscription_response, 'cancel_at_period_end', False),
     }
     
     
@@ -149,36 +153,32 @@ def get_checkout_customer_plan(session_id):
     sub_stripe_id = checkout_r.subscription
         
     sub_r = helpers.billing.get_subscription(sub_stripe_id, raw=True)
-    status = sub_r.status
-    sub_plan = sub_r.plan 
     subscription_data = serialize_subscription_data(sub_r)
-    
-    sub_item = sub_r['items']['data'][0] if hasattr(sub_r, 'items') else None
-    period_source = sub_item if sub_item is not None and hasattr(
-        sub_item, 'current_period_start') else sub_r
-    
-    # check if attributes exists 
-    if sub_item is not None and hasattr(sub_item, 'price'):
+
+    sub_item = sub_r["items"]["data"][0]
+    if not sub_item:
+        raise IndexError()
+
+    if hasattr(sub_item, 'price'):
         sub_plan = sub_item.price.id
     elif hasattr(sub_item, 'plan'):
         sub_plan = sub_item.plan.id
-    elif hasattr(sub_r, 'plan'):
-        sub_plan = sub_r.plan.id
     else:
         sub_plan = None
 
     now = date_utils.timestamp_as_datetime(time.time())
     current_period_start = date_utils.timestamp_as_datetime(
-        period_source.current_period_start
-        ) if hasattr(period_source, 'current_period_start') else now
+        sub_item.current_period_start
+    )
+
     current_period_end = date_utils.timestamp_as_datetime(
-        period_source.current_period_end
-        ) if hasattr(period_source, 'current_period_end') else now
-    original_period_start = date_utils.timestamp_as_datetime(
-        sub_r.created
-        ) if hasattr(sub_r, 'created') else current_period_start
-
-
+        sub_item.current_period_end
+    )
+    original_period_start = (
+        date_utils.timestamp_as_datetime(sub_r.created)
+        if hasattr(sub_r,'created') else current_period_start
+        
+    )
     data = {
         "customer_id":customer_id,
         'plan_id':sub_plan, 
