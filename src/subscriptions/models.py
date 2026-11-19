@@ -175,7 +175,8 @@ class UserSubscription(models.Model):
             INCOMPLETE ='incomplete','Incomplete'
             INCOMPLETE_EXPIRED = 'incomplete_expired', 'Expired'
             PAST_DUE ='past_due', 'Past Due'
-            CANCELLED ='unpaid','Unpaid'
+            UNPAID = 'unpaid', 'Unpaid'
+            CANCELLED = 'canceled', 'Cancelled'
             PAUSED = 'paused' , 'Paused'
             
     user = models.OneToOneField(User,on_delete = models.CASCADE)
@@ -192,6 +193,30 @@ class UserSubscription(models.Model):
         choices = SubscriptionStatus.choices, null = True,blank = True)  
     current_period_end = models.DateTimeField(auto_now = False,auto_now_add = False,
         blank = True,null = True)
+    def get_absolute_url(self):
+        return reverse("user_subscription")
+    
+    @property
+    def plan_name(self):
+        if not self.subscription:
+            return None
+        return self.subscription.name
+    
+    def serialize(self):
+        return {
+            "plan_name":self.plan_name,
+            "status": self.status,
+            "current_period_start":self.current_period_start,
+            "current_period_end":self.current_period_end
+        }
+    @property
+    def billing_cycle_achor(self):
+        """
+        Optional delay to start a new subscription in Stripe checkout 
+        """
+        if not self.current_period_end:
+            return None
+        return int(self.current_period_end.timestamp())
     
     @property
     def billing_cycle_achor(self):

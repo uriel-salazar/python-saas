@@ -1,27 +1,19 @@
 {% extends 'base.html' %}
 
-{% block head_title %}Home -{{ block.super }}{% endblock head_title %}
+{% block head_title %}Success -{{ block.super }}{% endblock head_title %}
 
 {% block content %}
-<h1 class="text-3xl font-medium mb-4 text-center">{{ page_title }}</h1>
-<h1 class='text-lg font-big'> Succcess Welcome  !</h1>
+<h1 class="page-title page-title--center">{{ page_title }}</h1>
 
-<div class='type-subscription'>
-    {{subscription.id}}
+<div class="panel stack">
+  <p class="success-message">Success! Welcome.</p>
 
+  <div>
+    <span class="muted">Subscription ID:</span>
+    {{ subscription.id }}
+  </div>
+
+  <div>{{ subscription }}</div>
+  <div>{{ checkout }}</div>
 </div>
-
-
-
-
-
-<div class='mb-12'>
-    {{ subscription }}
-</div>
-
-<div>
-    {{ checkout }}
-</div>
-
-
 {% endblock content %}

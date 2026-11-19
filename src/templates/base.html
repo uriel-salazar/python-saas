@@ -7,18 +7,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block head_title %}SAAS{% endblock head_title %}</title>
 
-    <link rel="stylesheet" href="{% static 'vendors/flowbite.min.css' %}">
-    <link rel="stylesheet" href="{% static 'vendors/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
     {% include 'snippets/navbar.html' %}
 
-    <main class="pt-16">
+    <main class="page-main">
     {% block content %}
     {% endblock content %}
     </main>
 
-    <script src="{% static 'vendors/flowbite.min.js' %}"></script>
+    <script>
+      const navToggle = document.querySelector('.nav-toggle');
+      if (navToggle) {
+        navToggle.addEventListener('click', () => {
+          const isOpen = document.querySelector('.nav-menu').classList.toggle('is-open');
+          navToggle.setAttribute('aria-expanded', String(isOpen));
+        });
+      }
+    </script>
 </body>
 </html>

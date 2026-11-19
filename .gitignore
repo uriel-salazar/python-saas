@@ -6,3 +6,8 @@ local-cdn/
 src\staticfiles\vendors\
 staticfiles/
 launch.json
+
+# Keep the plain CSS stylesheet trackable
+!src/staticfiles/
+src/staticfiles/vendors/
+!src/staticfiles/css/
