@@ -13,9 +13,7 @@ def user_subscription_view(request):
     Return : Status data subscription to the user
     """
     user_sub_obj, _ = UserSubscription.objects.get_or_create(
-        user = request.user)
-    sub_data = user_sub_obj.serialize()
-
+        user = request.user) 
     if user_sub_obj.stripe_id:
         try:
             stripe_sub = helpers.billing.get_subscription(

@@ -1,13 +1,7 @@
 {% if request.user.is_authenticated %}
-<!-- If user is authenticated, we render " welcome back " 
- with the name of the user -->
-    <p class="text-green-600 font-medium">
-        Welcome back, {{ request.user.username }}!
-    </p>
+<!-- If user is authenticated, we render "welcome back" with the name of the user -->
+<p class="welcome-user">Welcome back, {{ request.user.username }}!</p>
 {% else %}
-<!-- Otherwhise, we return this, because it's a guest
- that person is not authenticated -->
-    <p class="text-gray-600">
-        Welcome, guest!
-    </p>
+<!-- Otherwise, we return this because the person is not authenticated -->
+<p class="welcome-guest">Welcome, guest!</p>
 {% endif %}
